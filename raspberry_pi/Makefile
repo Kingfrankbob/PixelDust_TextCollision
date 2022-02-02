@@ -11,7 +11,7 @@ PIXELDUST_PATH=..
 CXXFLAGS=-Wall -Ofast -fomit-frame-pointer -funroll-loops -s -I$(RGB_INCDIR) -I$(PIXELDUST_PATH)
 LDFLAGS=-L$(RGB_LIBDIR) -l$(RGB_LIBRARY_NAME) -lrt -lm -lpthread
 LIBS=Adafruit_PixelDust.o lis3dh.o $(RGB_LIBRARY)
-EXECS=demo1-snow demo2-hourglass demo3-logo
+EXECS=demo1-snow Collision_Text demo3-logo
 
 all: $(EXECS)
 
@@ -27,7 +27,7 @@ demo1-snow: demo1-snow.cpp $(LIBS)
 	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
 	strip $@
 
-demo2-hourglass: demo2-hourglass.cpp $(LIBS)
+Collision_Text: Collision_Text.cpp $(LIBS)
 	$(CXX) $(CXXFLAGS) $< $(LDFLAGS) $(LIBS) -o $@
 	strip $@
 

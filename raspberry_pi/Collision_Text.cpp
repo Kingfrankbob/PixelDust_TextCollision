@@ -14,18 +14,36 @@
 #include "led-matrix-c.h"
 #include "lis3dh.h"
 #include <signal.h>
+#include <iostream>
+#include <iomanip>
+using std::setw;
+using namespace std;
 
 #define N_GRAINS 800 ///< Number of sand grains on 64x64 matrix
 
 struct RGBLedMatrix *matrix;
 Adafruit_LIS3DH lis3dh;
+Adafruit_PixelDust *sand = NULL;
 volatile bool running = true;
 int nGrains = N_GRAINS; // Runtime grain count (adapts to res)
+
 
 // Signal handler allows matrix to be properly deinitialized.
 int sig[] = {SIGHUP,  SIGINT, SIGQUIT, SIGABRT,
              SIGKILL, SIGBUS, SIGSEGV, SIGTERM};
+             
+             
+ double A[5][5] = { {0, 0, 1, 0, 0},
+                    {0, 1, 0, 1, 0},
+                    {0, 1, 1, 1, 0},
+                    {0, 1, 0, 1, 0},
+                    {0, 1, 0, 1, 0} };
+             
+      
 #define N_SIGNALS (int)(sizeof sig / sizeof sig[0])
+
+
+
 
 void irqHandler(int dummy) {
   if (matrix) {
@@ -36,12 +54,35 @@ void irqHandler(int dummy) {
     signal(sig[i], NULL);
   running = false;
 }
+template<int H> 
+void drawBMP(struct LedCanvas *canvas, double a[][H], int L, int x, int o, int R, int G, int B){
+         for ( int j = 0; j < L; j++, o++) {
+           for (int l = 0; l < H; l++){
+            if((a[j][l]) == 1){
+                led_canvas_set_pixel(canvas, x + l, o, R, G, B);
+            }
+           }  
+      }
+ }
+template<int H>
+ void initBMP(double a[][H], int L, int x, int o){
+        for ( int j = 0; j < L; j++, o++) {
+           for (int l = 0; l < H; l++){
+            if((a[j][l]) == 1){
+              sand->setPixel(x+l, o);
+            }
+           }  
+      }
+ }
+
+
+
+
 
 int main(int argc, char **argv) {
   struct RGBLedMatrixOptions options;
   struct LedCanvas *canvas;
   int width, height, i, xx, yy, zz;
-  Adafruit_PixelDust *sand = NULL;
   dimension_t x, y;
 
   for (i = 0; i < N_SIGNALS; i++)
@@ -80,9 +121,14 @@ int main(int argc, char **argv) {
     return 3;
   }
 
-  // Insert obstacles into the PixelDust grid.
-  // This generates a pair of sine waves to work like an hourglass.
-  int w;
+
+    //  for(i = 10; i < 50; i++){
+    //  sand->setPixel(i, 16);
+    // }
+    initBMP(A, 5, 20, 20);
+
+
+  /*
   for (i = 0; i < height; i++) {
     w = (int)((1.0 - cos((double)i * M_PI * 2.0 / (double)(height - 1))) *
                   ((double)width / 4.0 - 1.0) +
@@ -92,23 +138,51 @@ int main(int argc, char **argv) {
       sand->setPixel(width - 1 - x, i); // Right
     }
   }
-
+  */
   sand->randomize(); // Initialize random sand positions
 
   while (running) {
-    // Read accelerometer...
-    lis3dh.accelRead(&xx, &yy, &zz);
+    
+    int kl = 111;
+ 
+ 
+      if(kl == 111){
+      yy += kl;
+    }
+    if(kl == -111){
+      yy -=kl;
+    }
+      
+      if(yy > 1200){
+        kl = -111;
+      }
+      if(yy < -1200){
+        kl = 111;
+      }
+   //         if(kl == 111){
+   //   xx += kl;
+   // }
+   // if(kl == -111){
+   //   xx -=kl;
+    //}
+      
+     // if(xx > 1200){
+     //   kl = -111;
+      //}
+      //if(xx < -1200){
+     //  kl = 111;
+     // }
+ 
+  // printf("Decimals: %d %d", kl, yy);
 
-    // Run one frame of the simulation.  Axis flip here
-    // depends how the accelerometer is mounted relative
-    // to the LED matrix.
-    sand->iterate(-xx, -yy, zz);
+    sand->iterate(0, yy, 0);
 
     // Canvas is cleared and both the hourglass and sand
     // grains are re-drawn every frame.  It's easier than
     // trying to erase-and-redraw when animation is
     // double-buffered.
     led_canvas_clear(canvas);
+    /*
     for (i = 0; i < height; i++) { // Hourglass...
       w = (int)((1.0 - cos((double)i * M_PI * 2.0 / (double)(height - 1))) *
                     ((double)width / 4.0 - 1.0) +
@@ -118,17 +192,32 @@ int main(int argc, char **argv) {
         led_canvas_set_pixel(canvas, width - 1 - x, i, 32, 32, 96); // Right
       }
     }
+    */
+     
+    
+    //for(i = 10; i < 50; i++){
+    //  led_canvas_set_pixel(canvas, i, 16, 32, 32, 96);
+    //}
+
     for (i = 0; i < nGrains; i++) { // Sand...
       sand->getPosition(i, &x, &y);
       led_canvas_set_pixel(canvas, x, y, 200, 200, 100);
     }
+    drawBMP(canvas, A, 5, 20, 20, 32, 32, 96);
+
+
+
+
 
     // Update matrix contents on next vertical sync
     // and provide a new canvas for the next frame.
     canvas = led_matrix_swap_on_vsync(matrix, canvas);
+    kl = (kl + 1);
   }
 
   return 0;
 }
+
+
 
 #endif // !ARDUINO
