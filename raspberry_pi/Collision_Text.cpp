@@ -9,7 +9,7 @@
  */
 
 #ifndef ARDUINO // Arduino IDE sometimes aggressively builds subfolders
-
+//VS CODE SYNC?
 #include "Adafruit_PixelDust.h"
 #include "led-matrix-c.h"
 #include "lis3dh.h"
