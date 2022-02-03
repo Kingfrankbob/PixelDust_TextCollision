@@ -1,0 +1,3 @@
+CollisionText KEYWORD1
+initBMP KEYWORD2
+drawBMP KEYWORD2
