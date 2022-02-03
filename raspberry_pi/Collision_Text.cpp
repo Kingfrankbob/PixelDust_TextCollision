@@ -15,8 +15,6 @@ CREATES BITMAPS AND THE COLLISION FOR THE SAND
 using std::setw;
 using namespace std;
 
-//#define N_GRAINS 800 ///< Number of sand grains on 64x64 matrix
-
 struct RGBLedMatrix *matrix;
 Adafruit_PixelDust *sand = NULL;
 
