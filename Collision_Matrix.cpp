@@ -14,11 +14,11 @@
 #include <iomanip>
 using std::setw;
 using namespace std;
-
+struct LedCanvas *canvas
 struct RGBLedMatrix *matrix;
   
 template<int H> 
-void Collision_Matrix::drawMTX(struct LedCanvas *canvas, double a[][H], int L, int x, int o, int R, int G, int B){
+void Collision_Matrix::drawMTX(double a[][H], int L, int x, int o, int R, int G, int B){
          for ( int j = 0; j < L; j++, o++) {
            for (int l = 0; l < H; l++){
             if((a[j][l]) == 1){
