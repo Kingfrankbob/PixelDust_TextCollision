@@ -14,7 +14,7 @@
 #include <iomanip>
 using std::setw;
 using namespace std;
-struct LedCanvas *canvas
+struct LedCanvas *canvas;
 struct RGBLedMatrix *matrix;
   
 template<int H> 
