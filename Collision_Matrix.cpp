@@ -12,13 +12,16 @@
 #include <signal.h>
 #include <iostream>
 #include <iomanip>
-using std::setw;
+//using std::setw;
 using namespace std;
 struct LedCanvas *canvas;
 struct RGBLedMatrix *matrix;
-  
-template<int H> 
-void Collision_Matrix::drawMTX(double a[][H], int L, int x, int o, int R, int G, int B){
+Adafruit_PixelDust *sand = NULL;
+
+
+
+template<int H>
+void Collision_Matrix::drawMTX(int a[][H], int L, int x, int o, int R, int G, int B){
          for ( int j = 0; j < L; j++, o++) {
            for (int l = 0; l < H; l++){
             if((a[j][l]) == 1){
@@ -28,7 +31,7 @@ void Collision_Matrix::drawMTX(double a[][H], int L, int x, int o, int R, int G,
       }
  }
 template<int H>
- void Collision_Matrix::initMTX(double a[][H], int L, int x, int o){
+ void Collision_Matrix::initMTX(int a[][H], int L, int x, int o){
         for ( int j = 0; j < L; j++, o++) {
            for (int l = 0; l < H; l++){
             if((a[j][l]) == 1){
