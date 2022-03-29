@@ -1,0 +1,19 @@
+ERROR: 
+pi@Matrix:~ $ cd /home/pi/Adafruit_PixelDust/raspberry_pi
+pi@Matrix:~/Adafruit_PixelDust/raspberry_pi $ make
+g++ -Wall -Ofast -fomit-frame-pointer -funroll-loops -s -I../../rpi-rgb-led-matrix/include -I.. Collision_Text.cpp -L../../rpi-rgb-led-matrix/lib -lrgbmatrix -lrt -lm -lpthread Adafruit_PixelDust.o lis3dh.o ../../rpi-rgb-led-matrix/lib/librgbmatrix.a -o Collision_Text
+Collision_Text.cpp: In function ‘int main(int, char**)’:
+Collision_Text.cpp:68:25: warning: unused variable ‘xx’ [-Wunused-variable]
+   68 |   int width, height, i, xx, yy, zz;
+      |                         ^~
+Collision_Text.cpp:68:33: warning: unused variable ‘zz’ [-Wunused-variable]
+   68 |   int width, height, i, xx, yy, zz;
+      |                                 ^~
+Collision_Text.cpp:133:10: warning: ‘yy’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  133 |       yy += kl;
+      |       ~~~^~~~~
+/usr/bin/ld: /tmp/ccMXDR8H.o: in function `main':
+Collision_Text.cpp:(.text.startup+0x1b4): undefined reference to `void Collision_Matrix::drawMTX<5>(int (*) [5], int, int, int, int, int, int)'
+collect2: error: ld returned 1 exit status
+make: *** [Makefile:33: Collision_Text] Error 1
+pi@Matrix:~/Adafruit_PixelDust/raspberry_pi $ 
