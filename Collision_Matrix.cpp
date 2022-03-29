@@ -6,7 +6,7 @@
  * Author: Michael Cragun
  * BSD license, all text here must be included in any redistribution.
  */
-#include "Collision_Matrix.h"
+#include "Collision_Matrix.hpp"
 #include "Adafruit_PixelDust.h"
 #include "led-matrix-c.h"
 #include <signal.h>
