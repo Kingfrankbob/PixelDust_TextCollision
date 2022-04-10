@@ -8,9 +8,11 @@
  *
  */
 
+
 #ifndef ARDUINO // Arduino IDE sometimes aggressively builds subfolders
 //VS CODE SYNC?
-#include "Collision_Matrix.h"
+#include "Collision.hpp"
+//#include "Collision_Matrix.cpp"
 #include "Adafruit_PixelDust.h"
 #include "led-matrix-c.h"
 #include "lis3dh.h"
@@ -24,11 +26,15 @@ using namespace std;
 
 
 Adafruit_LIS3DH lis3dh;
-Collision_Matrix collide;
-Adafruit_PixelDust *sand = NULL;
+//Collision_Matrix coll;
+//Adafruit_PixelDust *sand = NULL;
 volatile bool running = true;
 int nGrains = N_GRAINS; // Runtime grain count (adapts to res)
 struct RGBLedMatrix *matrix;
+
+
+
+
 
 // Signal handler allows matrix to be properly deinitialized.
 int sig[] = {SIGHUP,  SIGINT, SIGQUIT, SIGABRT,
@@ -52,34 +58,13 @@ void irqHandler(int dummy) {
     signal(sig[i], NULL);
   running = false;
 }
-template<int H> 
-void drawBMP(struct LedCanvas *canvas, double a[][H], int L, int x, int o, int R, int G, int B){
-         for ( int j = 0; j < L; j++, o++) {
-           for (int l = 0; l < H; l++){
-            if((a[j][l]) == 1){
-                led_canvas_set_pixel(canvas, x + l, o, R, G, B);
-            }
-           }  
-      }
- }
-template<int H>
- void initBMP(double a[][H], int L, int x, int o){
-        for ( int j = 0; j < L; j++, o++) {
-           for (int l = 0; l < H; l++){
-            if((a[j][l]) == 1){
-              sand->setPixel(x+l, o);
-            }
-           }  
-      }
- }
-
-
-
 
 
 int main(int argc, char **argv) {
   struct RGBLedMatrixOptions options;
   struct LedCanvas *canvas;
+  struct RGBLedMatrix *matrix;
+  Adafruit_PixelDust *sand = NULL;
   int width, height, i, xx, yy, zz;
   dimension_t x, y;
 
@@ -100,13 +85,12 @@ int main(int argc, char **argv) {
   // Create offscreen canvas for double-buffered animation
   canvas = led_matrix_create_offscreen_canvas(matrix);
   led_canvas_get_size(canvas, &width, &height);
-  fprintf(stderr, "Size: %dx%d. Hardware gpio mapping: %s\n", width, height,
-          options.hardware_mapping);
+  //fprintf(stderr, "Size: %dx%d. Hardware gpio mapping: %s\n", width, height,
+  
 
   if (width < 64)
     nGrains /= 2; // Adjust sand count
-  if (height < 64)
-    nGrains /= 2; // for smaller matrices
+
 
   if (lis3dh.begin()) {
     puts("LIS3DH init failed");
@@ -138,7 +122,8 @@ int main(int argc, char **argv) {
   }
   */
   sand->randomize(); // Initialize random sand positions
-
+  //coll.initMTX(A, 5, 20, 20);
+  //initBMP(A, 5, 20, 20);
   while (running) {
     
     int kl = 111;
@@ -201,13 +186,16 @@ int main(int argc, char **argv) {
       sand->getPosition(i, &x, &y);
       led_canvas_set_pixel(canvas, x, y, 200, 200, 100);
     }
-    double A[5][5] = { {0, 0, 1, 0, 0},
-                    {0, 1, 0, 1, 0},
-                    {0, 1, 1, 1, 0},
-                    {0, 1, 0, 1, 0},
-                    {0, 1, 0, 1, 0} };
-    collide.drawMTX(A, 5, 20, 20, 32, 32, 96);
- 
+
+
+long long int a =  0010001010011100101001010;  
+//  int d[2][2] = {{0,1},
+//                  {1, 0}};
+
+
+
+    Collision_Matrix::initMTX(a, 5, 5, 0, 0);
+//coll.func<5u, 5u>(a);
 
 
 
