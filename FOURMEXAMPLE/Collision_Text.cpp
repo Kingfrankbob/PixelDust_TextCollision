@@ -11,6 +11,9 @@
 
 #ifndef ARDUINO // Arduino IDE sometimes aggressively builds subfolders
 //VS CODE SYNC?
+#include <cstdlib>
+#include <cstdio>
+#include <cstdint>
 #include "Collision.hpp"
 //#include "Collision_Matrix.cpp"
 #include "Adafruit_PixelDust.h"
@@ -24,7 +27,7 @@ using namespace std;
 
 #define N_GRAINS 800 ///< Number of sand grains on 64x64 matrix
 
-
+//Collision coll;
 Adafruit_LIS3DH lis3dh;
 //Collision_Matrix coll;
 //Adafruit_PixelDust *sand = NULL;
@@ -188,13 +191,20 @@ int main(int argc, char **argv) {
     }
 
 
-long long int a =  0010001010011100101001010;  
+//long long int a =  0010001010011100101001010;  
 //  int d[2][2] = {{0,1},
 //                  {1, 0}};
 
 
+ int a[][5] = {    {0, 0, 1, 0, 0},
+                    {0, 1, 0, 1, 0},
+		                {0, 1, 1, 1, 0},
+                    {0, 1, 0, 1, 0},
+                    {0, 1, 0, 1, 0} };
 
-    Collision_Matrix::initMTX(a, 5, 5, 0, 0);
+
+ //Collision::foo<5>(a, 5, 5, 150, 150, 150);
+Collision::adatest();
 //coll.func<5u, 5u>(a);
 
 
